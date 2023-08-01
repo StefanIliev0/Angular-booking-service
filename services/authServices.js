@@ -17,9 +17,9 @@ exports.addNewUser = async (username , password) => {
     }
 
     const hashedPassword = await bcript.hash(password ,10) ; 
-    const currentUser = {username , password : hashedPassword , accessToken : '', places : [] , books : [] , profilePicture : "" , about : "" , mesages : []} ; 
+    const currentUser = {username , nickname : username, password : hashedPassword , accessToken : '', places : [] , books : [] , profilePicture : "" , about : "" , mesages : []} ; 
     const newUser = await User.create(currentUser); 
-    const token = await this.setToken(JSON.stringify({_id: newUser._id , username : newUser.username}));
+    const token = await this.setToken(JSON.stringify({_id: newUser._id , username : newUser.username , username : newUser.username}));
     const upatedUser = await this.UpdateUser("accessToken", token , newUser._id);
     return {...newUser.toObject(), "accessToken" : token };
 } ; 
@@ -50,7 +50,7 @@ exports.removeToken = async (_id) => {
 }
 
 exports.getUser = async (username) => {
-    const  user = await User.findOne({username}).populate("places").populate("books").lean();
+    const  user = await User.findOne({username}).populate("books").populate("places").lean();
     return  ({
     _id : user._id, 
     username : user.username ,

@@ -22,8 +22,7 @@ const PlaaceSchema = new mongoose.Schema({
     }, 
     rating : [{
         user : {
-            type : mongoose.Types.ObjectId , 
-            ref : `User`
+            type : String
         },
         rate : {
             type: Number,
@@ -32,6 +31,10 @@ const PlaaceSchema = new mongoose.Schema({
         }
     }],
     price : {
+        type : Number , 
+        require : true
+    },
+    rooms : {
         type : Number , 
         require : true
     },

@@ -17,7 +17,7 @@ router.post(`/login` , async (req, res ,next) => {
     try{
     const user = await authServices.verifyUser(username , password); 
     
-    const token  = await authServices.setToken({ _id :user._id , username : user.username});
+    const token  = await authServices.setToken({ _id :user._id , username : user.username , nickname : user.nickname});
     await authServices.UpdateUser("accessToken" ,token , user._id); 
     const currnetUser = await authServices.getUser(username); 
     res.json(currnetUser)

@@ -13,6 +13,9 @@ const userShema = new mongoose.Schema({
     accessToken : {
         type : String 
     },
+    nickname : {
+        type : String
+    },
     places : [{
             type : mongoose.Types.ObjectId ,
             ref : "Place"
@@ -27,9 +30,9 @@ const userShema = new mongoose.Schema({
             require : true
         },
         place : {
-            type : String,
-            require : true
-        }
+            type : mongoose.Types.ObjectId ,
+            ref : "Place"
+    }
     }],
     profilePicture : {
         type : String

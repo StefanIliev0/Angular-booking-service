@@ -30,7 +30,7 @@ if(!!price && !!location ){
      colectionLength = (await Place.find(criteria)).length;
 }
 if(colection.length > 0){
-    colection = colection.map(a => ({ image : a.images[0] || '' , title : a.title ,  location : a.location , owner : a.owner.username , price : a.price , _id : a._id.toString()})); 
+    colection = colection.map(a => ({ image : a.images[0] || '' , title : a.title ,  location : a.location , owner : a.owner.nickname , price : a.price , _id : a._id.toString()})); 
 }
  return {colection,colectionLength}
 } 
@@ -46,6 +46,12 @@ exports.getPlace = async ( placeId ) => {
 exports.addComment = async ( placeId , comment ) => {
     let place = await Place.findById(placeId);
     place.comments.push(comment);
+    await place.save();
+    return place; 
+}
+exports.removeComment = async ( placeId , commentID ) => {
+    let place = await Place.findById(placeId);
+    place.comments = place.comments.filter(x => x._id != commentID );
     await place.save();
     return place; 
 }

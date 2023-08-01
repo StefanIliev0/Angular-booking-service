@@ -1,6 +1,7 @@
 const router = require(`express`).Router() ;
 const authMiddkewares = require(`../middlewares/authMiddelwares`);
 const placeServices = require(`../services/placeService`) ; 
+const userService = require(`../services/userService`)
 const querystring = require('querystring')
 
 
@@ -57,14 +58,17 @@ router.patch(`/:placeId/update`,authMiddkewares.autorization ,async (req, res , 
 });
 router.delete(`/:placeId/remove`,authMiddkewares.autorization ,async (req, res , next)=>{
     try{
+        const userID = req.user._id ;
         const removedPlace = await placeServices.removePlace(req.params.placeId ) ; 
+        const removeUserPlace = await userService.removePlace(req.params.placeId , userID)
          res.status(204) ;
 }catch(err){
     res.status(400).json({ error : err.message });
 }
 });
 router.post(`/create`,authMiddkewares.autorization ,async (req, res , next)=>{
-    const {title , description, images, location, price, facilities, businesTravel} = req.body; 
+    try{
+    const {title , description, images, location, price, facilities, businesTravel, rooms} = req.body; 
     const owner = req.user._id ;
 
     const place = {
@@ -75,20 +79,22 @@ router.post(`/create`,authMiddkewares.autorization ,async (req, res , next)=>{
         price,
         facilities,
         businesTravel,
-        owner
+        owner,
+        rooms
     }
-    try{
+   
     const newPlace = await placeServices.addPlace(place) ;
+    const userPlace =  await userService.addPlace(newPlace._id ,owner);
     res.json(newPlace);
      }catch(err){
         res.status(400).json({ error : err.message });
      }
 });
-router.post(`/:placeId/add-comment` ,async (req, res , next)=>{
+router.post(`/:placeId/addComment` ,async (req, res , next)=>{
+      try{
     const {comment} = req.body; 
     const userID = req.user._id ;
     const  userNickname = req.user.nickname
-
     const newComment = {
         user : {
             userID ,
@@ -96,14 +102,23 @@ router.post(`/:placeId/add-comment` ,async (req, res , next)=>{
         },
         comment 
     }
-    try{
+ 
     const place = await placeServices.addComment(req.params.placeId , newComment) ; 
-    res.status(204);
+    res.json(newComment).status(204);
 }catch(err){
     res.status(400).json({ error : err.message });
 }
 });
-router.post(`/:placeId/make-book` ,async (req, res , next)=>{
+router.delete(`/:placeId/removeComment/:commentId` ,async (req, res , next)=>{
+    try{
+  const place = await placeServices.removeComment(req.params.placeId , req.params.commentId) ; 
+  res.status(204);
+}catch(err){
+  res.status(400).json({ error : err.message });
+}
+});
+router.post(`/:placeId/makeBook` ,async (req, res , next)=>{
+     try{
     const {book} = req.body; 
     const userID = req.user._id ;
 
@@ -112,14 +127,16 @@ router.post(`/:placeId/make-book` ,async (req, res , next)=>{
         from : book.from,
         to : book.to
     }
-    try{
+  
     const place = await placeServices.addBook(req.params.placeId , newBook) ; 
+    const userBook = await userService.addBook( {from : book.from , to : book.to , place : req.params.placeId } , userID)
     res.status(204);
 }catch(err){
     res.status(400).json({ error : err.message });
 }
 });
 router.post(`/:placeId/addRate`,async (req, res , next)=>{
+   try{
     const {rate} = req.body; 
     const userID = req.user._id ;
 
@@ -127,7 +144,7 @@ router.post(`/:placeId/addRate`,async (req, res , next)=>{
         user :userID,
         rate 
     }
-    try{
+   
     const place = await placeServices.addRate(req.params.placeId , newRate) ; 
     res.status(204);
 }catch(err){
