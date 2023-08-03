@@ -20,3 +20,7 @@ exports.removePlace = async ( placeId , owner ) => {
     await user.save();
     return user; 
 }
+exports.editUser = async ( userId , newData ) => {
+    let place = await User.findByIdAndUpdate(userId , newData);
+    return place; 
+}

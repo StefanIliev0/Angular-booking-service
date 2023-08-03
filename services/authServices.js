@@ -53,6 +53,7 @@ exports.getUser = async (username) => {
     const  user = await User.findOne({username}).populate("books").populate("places").lean();
     return  ({
     _id : user._id, 
+    nickname : user.nickname, 
     username : user.username ,
     accessToken : user.accessToken || "" ,
     places : user.places || [],
@@ -61,4 +62,5 @@ exports.getUser = async (username) => {
     about : user.about || "" ,
     mesages : user.mesages || [] , 
 })
+
 }

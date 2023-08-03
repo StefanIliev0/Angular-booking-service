@@ -1,5 +1,7 @@
 const router = require(`express`).Router() ;
 const authServices = require(`../services/authServices`) ;
+const authMiddkewares = require(`../middlewares/authMiddelwares`);
+const userService = require(`../services/userService`)
 
 
 router.post(`/register`  , async(req ,res) => {
@@ -32,6 +34,15 @@ try{
 }catch(err){
     res.status(400).json({ error : err.message });
 }}) ; 
+router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , next)=>{
+    try{
+    const user =  {nickname , about , profilePicture } = req.body; 
 
+    const UpdatedUser = await userService.editUser(req.params.userId , user) ; 
+    res.status(204) ;
+}catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
 
 module.exports = router ;

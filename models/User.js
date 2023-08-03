@@ -41,11 +41,40 @@ const userShema = new mongoose.Schema({
         type : String
     },
     mesages : [{
+            forPlace : {
+                title : {
+                    type : String
+                },
+                id : {
+                    type : String
+                },
+                from :{
+                    type : String
+                },
+                to : {
+                    type : String
+                },
+            },
+            approval : {
+                aprove : {
+                    type : Boolean
+                },
+                unaprove : {
+                    type : Boolean
+                }
+            },
             participants :[{
-            type : String
+            id : {
+                type :String},
+            nickname : {
+                type : String
+            }
             }],
             mesages : [{
-                username : {
+                read : {
+                    type : Boolean
+                },
+                user : {
                     type :String
                 },
                 mesage : {
