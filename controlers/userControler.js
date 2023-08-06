@@ -44,5 +44,44 @@ router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , n
     res.status(400).json({ error : err.message });
 }
 });
+router.post(`/:userId/addConversation`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+    const conversation  =  {title , placeId , from , to  } = req.body; 
+    const bookingUserId = req.user._id ;
+    const bookingUserNickname = req.user.nickname ; 
+    const newConv = await userService.addConversation(req.params.userId ,bookingUserId, bookingUserNickname,conversation) ; 
+    res.status(201).json(newConv);
+}catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
+router.delete(`/messages/:conversationId`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+    const userId = req.user._id ;
+    const newConv = await userService.removeConversation(userId, req.params.conversationId ) ; 
+    res.status(202);
+}catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
+router.post(`/messages/:messageId`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+    const  {text, otherUserId , userId} = req.body; 
+    const textMessageId  = req.params.messageId ; 
+    const userOneMessage = await userService.addMessage(text, otherUserId , userId , textMessageId) ; 
+    res.status(201).json(userOneMessage);
+}catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
+router.get(`/userData`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+    const userId = req.user._id ;
+    const userData = await userService.getUserData(userId) ; 
+    res.status(200).json(userData);
+}catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
 
 module.exports = router ;

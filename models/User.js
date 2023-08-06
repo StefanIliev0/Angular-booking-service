@@ -56,10 +56,10 @@ const userShema = new mongoose.Schema({
                 },
             },
             approval : {
-                aprove : {
+                approve : {
                     type : Boolean
                 },
-                unaprove : {
+                unapprove : {
                     type : Boolean
                 }
             },
