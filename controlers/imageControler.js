@@ -51,10 +51,10 @@ router.post(`/:fileName`  , async(req ,res) => {
       Bucket: 'cyclic-kind-lime-attire-eu-central-1',
       Key: fileName,
     }).promise();
-    console.log(s3File)
-    res.set('Content-type', s3File.ContentType)
+    res.set('Content-type', "image/jpeg")
     res.json({imageUrl :`{URL}/${fileName}`})
 }catch(err){
+    console.log(err)
     res.status(400).json({ error : err.message });
 }} );
 // router.get(`/:filename`  , async(req ,res) => {
