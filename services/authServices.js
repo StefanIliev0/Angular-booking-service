@@ -25,7 +25,6 @@ exports.addNewUser = async (username , password) => {
 } ; 
 
 exports.verifyUser = async(username , password) => {
-    
     const user = await User.findOne({username}).lean() ;
     const validPass = await bcript.compare(password , user.password) ; 
 

@@ -15,7 +15,6 @@ router.post(`/register`  , async(req ,res) => {
 } );
 router.post(`/login` , async (req, res ,next) => {
     const {username , password} = req.body ; 
-    
     try{
     const user = await authServices.verifyUser(username , password); 
     
@@ -74,6 +73,15 @@ router.post(`/messages/:messageId`,authMiddkewares.authentication ,async (req, r
     res.status(400).json({ error : err.message });
 }
 });
+router.post(`/messages/:conversationId/read`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+        const userId = req.user._id ;
+        const newConv = await userService.readMessages(userId, req.params.conversationId ) ; 
+        res.status(200);
+    }catch(err){
+        res.status(400).json({ error : err.message });
+    }
+});
 router.get(`/userData`,authMiddkewares.authentication ,async (req, res , next)=>{
     try{
     const userId = req.user._id ;
@@ -83,5 +91,6 @@ router.get(`/userData`,authMiddkewares.authentication ,async (req, res , next)=>
     res.status(400).json({ error : err.message });
 }
 });
+
 
 module.exports = router ;

@@ -1,0 +1,4 @@
+
+exports.addImage= async (image) => {
+
+}

@@ -100,6 +100,12 @@ exports.addMessage = async (text, otherUserId , userId , textMessageId) => {
     await userTwo.save()
     return 
 }
+exports.readMessages = async (userId , conversationId) => {
+    const userOne = await User.findById(userId);
+    let conversation = userOne.mesages.find(x => x._id == conversationId);
+    conversation.mesages = conversation.mesages.map(x => ({...x , read : true}));
+    userOne.save();
+}
 exports.getUserData = async (userId) => {
     let user  = await User.findById(userId);
     let data = {mesages : [...user.mesages] , books : [...user.books]}
