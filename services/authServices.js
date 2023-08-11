@@ -45,7 +45,9 @@ exports.UpdateUser = async (property  , token , _id) => {
     await User.findByIdAndUpdate({_id},{[property] : token});
 }
 exports.removeToken = async (_id) => {
-    await User.findByIdAndUpdate(_id,{accessToken : ""})
+ let user =   await User.findById(_id); 
+ user.accessToken = '';
+ await user.save()
 }
 
 exports.getUser = async (username) => {

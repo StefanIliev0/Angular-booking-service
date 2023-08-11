@@ -28,9 +28,11 @@ router.post(`/login` , async (req, res ,next) => {
 router.post (`/logout` , async (req , res , next) => {
     const {_id} = req.body ; 
 try{
-    await authServices.removeToken(_id); 
-    res.status(200);
+    await authServices.removeToken(_id);
+
+    res.status(200).json({});
 }catch(err){
+    console.log("logOuth err :",err )
     res.status(400).json({ error : err.message });
 }}) ; 
 router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , next)=>{
@@ -38,8 +40,9 @@ router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , n
     const user =  {nickname , about , profilePicture } = req.body; 
 
     const UpdatedUser = await userService.editUser(req.params.userId , user) ; 
-    res.status(204) ;
+    res.status(204).json({}) ;
 }catch(err){
+    console.log(err)
     res.status(400).json({ error : err.message });
 }
 });
@@ -47,7 +50,7 @@ router.post(`/:userId/addConversation`,authMiddkewares.authentication ,async (re
     try{
     const conversation  =  {title , placeId , from , to  } = req.body; 
     const bookingUserId = req.user._id ;
-    const bookingUserNickname = req.user.nickname ; 
+    const bookingUserNickname = req.user.username ; 
     const newConv = await userService.addConversation(req.params.userId ,bookingUserId, bookingUserNickname,conversation) ; 
     res.status(201).json(newConv);
 }catch(err){
@@ -58,8 +61,20 @@ router.delete(`/messages/:conversationId`,authMiddkewares.authentication ,async 
     try{
     const userId = req.user._id ;
     const newConv = await userService.removeConversation(userId, req.params.conversationId ) ; 
-    res.status(202);
+    res.status(202).json({});
 }catch(err){
+    res.status(400).json({ error : err.message });
+}
+});
+router.patch(`/messages/:conversationId/approve`,authMiddkewares.authentication ,async (req, res , next)=>{
+    try{
+    let {userOneId , userTwoId } = req.body; 
+    const aproveOne  = await userService.approveBookConv(userOneId , req.params.conversationId) ; 
+    const aproveTwo  = await userService.approveBookConv(userTwoId , req.params.conversationId) ; 
+
+    res.status(201).json({});
+}catch(err){
+    console.log("approve error" , err)
     res.status(400).json({ error : err.message });
 }
 });
@@ -77,7 +92,7 @@ router.post(`/messages/:conversationId/read`,authMiddkewares.authentication ,asy
     try{
         const userId = req.user._id ;
         const newConv = await userService.readMessages(userId, req.params.conversationId ) ; 
-        res.status(200);
+        res.status(200).json({});
     }catch(err){
         res.status(400).json({ error : err.message });
     }
@@ -88,6 +103,7 @@ router.get(`/userData`,authMiddkewares.authentication ,async (req, res , next)=>
     const userData = await userService.getUserData(userId) ; 
     res.status(200).json(userData);
 }catch(err){
+    console.log(err)
     res.status(400).json({ error : err.message });
 }
 });

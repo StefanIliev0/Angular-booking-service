@@ -68,7 +68,15 @@ exports.addRate = async ( placeId , rate ) => {
     return place; 
 }
 exports.updatePlace = async ( placeId , newData ) => {
-    let place = await Place.findByIdAndUpdate(placeId , newData);
+    let place = await Place.findById(placeId);
+    place.title = newData.title;
+    place.description = newData.description;
+    place.images = newData.images;
+    place.location = newData.location;
+    place.price = newData.price;
+    place.facilities = newData.facilities;
+    place.businesTravel = newData.businesTravel;
+    await place.save()
     return place; 
 }
 exports.removePlace = async ( placeId  ) => {

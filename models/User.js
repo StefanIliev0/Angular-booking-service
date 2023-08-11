@@ -80,8 +80,7 @@ const userShema = new mongoose.Schema({
                 mesage : {
                     type : String
                 }
-            }]
-        }]
+            }]}]
   
 })
 

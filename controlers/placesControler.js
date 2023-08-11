@@ -51,7 +51,7 @@ router.patch(`/:placeId/update`,authMiddkewares.autorization ,async (req, res , 
     const place =  {title , description, images, location, price, facilities, businesTravel} = req.body; 
 
     const UpdatedPlace = await placeServices.updatePlace(req.params.placeId , place) ; 
-    res.status(204) ;
+    res.status(204).json({}) ;
 }catch(err){
     res.status(400).json({ error : err.message });
 }
@@ -61,7 +61,7 @@ router.delete(`/:placeId/remove`,authMiddkewares.autorization ,async (req, res ,
         const userID = req.user._id ;
         const removedPlace = await placeServices.removePlace(req.params.placeId ) ; 
         const removeUserPlace = await userService.removePlace(req.params.placeId , userID)
-         res.status(204) ;
+         res.status(204).json({}) ;
 }catch(err){
     res.status(400).json({ error : err.message });
 }
@@ -112,26 +112,28 @@ router.post(`/:placeId/addComment` ,async (req, res , next)=>{
 router.delete(`/:placeId/removeComment/:commentId` ,async (req, res , next)=>{
     try{
   const place = await placeServices.removeComment(req.params.placeId , req.params.commentId) ; 
-  res.status(204);
+  res.status(204).json({});
 }catch(err){
   res.status(400).json({ error : err.message });
 }
 });
 router.post(`/:placeId/makeBook` ,async (req, res , next)=>{
      try{
-    const {book} = req.body; 
-    const userID = req.user._id ;
+    const {book , userId} = req.body; 
 
     const newBook = {
-        user :userID,
+        user :userId,
         from : book.from,
         to : book.to
     }
   
     const place = await placeServices.addBook(req.params.placeId , newBook) ; 
-    const userBook = await userService.addBook( {from : book.from , to : book.to , place : req.params.placeId } , userID)
-    res.status(204);
+    console.log("one")
+    const userBook = await userService.addBook( {from : book.from , to : book.to , place : req.params.placeId } , userId)
+    console.log("Two")
+    res.status(204).json({})
 }catch(err){
+    console.log("makeBook err : " , err)
     res.status(400).json({ error : err.message });
 }
 });
@@ -146,7 +148,7 @@ router.post(`/:placeId/addRate`,async (req, res , next)=>{
     }
    
     const place = await placeServices.addRate(req.params.placeId , newRate) ; 
-    res.status(204);
+    res.status(204).json({});
 }catch(err){
     res.status(400).json({ error : err.message });
 }
