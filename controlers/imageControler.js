@@ -17,7 +17,7 @@ router.post(`/:fileName`  , async(req ,res) => {
     console.log(fileName)
     try{
         let s3File = await s3.putObject({
-      Body: JSON.stringify(req.body),
+      Body: req.body,
       Bucket: 'cyclic-kind-lime-attire-eu-central-1',
       Key: fileName,
     }).promise();
