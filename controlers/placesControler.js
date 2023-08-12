@@ -10,8 +10,6 @@ router.get(`/travel-catalog` , async (req, res , next)=>{
     let page = req.query.page;
     let location = req.query.location;
     let price = req.query.price;
-
-
     let colection  = await placeServices.getColection({businesTravel : false}, page ,location,price) ; 
 
     res.status(200).json(colection) ;

@@ -10,12 +10,11 @@ exports.getColection = async (criteria, page, location, price) => {
     if(price && price.split("-").length == 2){
         curPrice = { $lte : Number(price.split("-")[1]) ,  $gte : Number(price.split("-")[0])};
     }else if(price && price.split(` `)[2] == "400" ){
-        curPrice = { $gte : Number(price.split(` `)[2])};
+        curPrice = { $gte : Number(price.split(` `)[2]),  $lte : 10000 };
 
     }else if(price && price.split(` `)[2] == "100" ){
-        curPrice = { $lte : Number(price.split(` `)[2])};
+        curPrice = { $lte : Number(price.split(` `)[2]) ,  $gte : 0};
     }
-    
 if(!!price && !!location ){
         colection = await Place.find({...criteria ,location, price : curPrice}).limit(6).skip((page * 6)).populate(`owner`).lean();
         colectionLength = (await Place.find({...criteria ,location, price : curPrice})).length
