@@ -32,7 +32,6 @@ try{
 
     res.status(200).json({});
 }catch(err){
-    console.log("logOuth err :",err )
     res.status(400).json({ error : err.message });
 }}) ; 
 router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , next)=>{
@@ -42,7 +41,6 @@ router.patch(`/:userId/update`,authMiddkewares.autorization ,async (req, res , n
     const UpdatedUser = await userService.editUser(req.params.userId , user) ; 
     res.status(204).json({}) ;
 }catch(err){
-    console.log(err)
     res.status(400).json({ error : err.message });
 }
 });
@@ -74,7 +72,6 @@ router.patch(`/messages/:conversationId/approve`,authMiddkewares.authentication 
 
     res.status(201).json({});
 }catch(err){
-    console.log("approve error" , err)
     res.status(400).json({ error : err.message });
 }
 });
@@ -103,7 +100,6 @@ router.get(`/userData`,authMiddkewares.authentication ,async (req, res , next)=>
     const userData = await userService.getUserData(userId) ; 
     res.status(200).json(userData);
 }catch(err){
-    console.log(err)
     res.status(400).json({ error : err.message });
 }
 });

@@ -6,7 +6,6 @@ const AWS = require("aws-sdk");
 const s3 = new AWS.S3();
 router.post(`/:fileName`  , async(req ,res) => {
     const fileName  = req.params.fileName ; 
-    console.log(fileName)
     try{
         let s3File = await s3.putObject({
       Body: req.body,
@@ -15,13 +14,11 @@ router.post(`/:fileName`  , async(req ,res) => {
     }).promise();
     res.json({imageUrl :`https://kind-lime-attire.cyclic.app/images/${fileName}`})
 }catch(err){
-    console.log(err)
     res.status(400).json({ error : err.message });
 }} );
 
 router.get(`/:fileName`  , async(req ,res) => {
     const fileName  = req.params.fileName ; 
-    console.log(fileName)
     try{
         let s3File = await s3.getObject({
       Bucket: 'cyclic-kind-lime-attire-eu-central-1',
@@ -31,12 +28,10 @@ router.get(`/:fileName`  , async(req ,res) => {
     res.set('Content-type',`image/${extension}`)
     res.send(s3File.Body);
 }catch(err){
-    console.log(err)
     res.status(400).json({ error : err.message });
 }} );
 router.delete(`/:fileName`  , async(req ,res) => {
     const fileName  = req.params.fileName ; 
-    console.log(fileName)
     try{
         let s3File = await s3.deleteObject({
       Bucket: 'cyclic-kind-lime-attire-eu-central-1',
@@ -44,7 +39,6 @@ router.delete(`/:fileName`  , async(req ,res) => {
     }).promise();
     res.json({})
 }catch(err){
-    console.log(err)
     res.status(400).json({ error : err.message });
 }} );
 module.exports = router ;

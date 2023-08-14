@@ -80,8 +80,12 @@ const userShema = new mongoose.Schema({
                 mesage : {
                     type : String
                 }
-            }]}]
-  
+            }],
+            convId : {
+                type : String 
+            }
+        
+        }]
 })
 
 const User = mongoose.model(`User` , userShema) ; 

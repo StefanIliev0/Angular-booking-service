@@ -126,12 +126,9 @@ router.post(`/:placeId/makeBook` ,async (req, res , next)=>{
     }
   
     const place = await placeServices.addBook(req.params.placeId , newBook) ; 
-    console.log("one")
     const userBook = await userService.addBook( {from : book.from , to : book.to , place : req.params.placeId } , userId)
-    console.log("Two")
     res.status(204).json({})
 }catch(err){
-    console.log("makeBook err : " , err)
     res.status(400).json({ error : err.message });
 }
 });

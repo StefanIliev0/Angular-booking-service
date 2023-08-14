@@ -30,6 +30,7 @@ exports.editUser = async ( userId , newData ) => {
 }
 exports.addConversation = async (ownerId,bookingUserId, bookingUserNickname,conversation) => {
     const  {title , placeId , from , to  } = conversation ; 
+    const convId = bookingUserId + conversation.placeId + (Number(new Date()).toString()); 
     let owner = await User.findById(ownerId);
     let user = await User.findById(bookingUserId); 
     let newConversation = {
@@ -50,39 +51,35 @@ exports.addConversation = async (ownerId,bookingUserId, bookingUserNickname,conv
             id :  bookingUserId,
             nickname : bookingUserNickname
             } ],
-        mesages : []
+        mesages : [],
+        convId : convId
     }
 
     user.mesages.push(newConversation); 
     await user.save();
-    user  = await User.findById(bookingUserId); 
-     let newUserConversation =  user.mesages[user.mesages.length - 1]; 
     owner.mesages.push(newConversation);
     await owner.save();
-    owner = await User.findById(ownerId);
-    owner.mesages[owner.mesages.length - 1]._id = newUserConversation._id
-    await owner.save();
-    return user.mesages[user.mesages.length - 1]
+    return newConversation
 }
 exports.approveBookConv =  async (userOneId,conversationId ) => {
     let userOne = await User.findById(userOneId);
-    let messageUserOne = userOne.mesages.find(x => x._id == conversationId )
+    let messageUserOne = userOne.mesages.find(x => x.convId == conversationId )
     messageUserOne.approval.approve = true ; 
     await userOne.save();
 }
 exports.removeConversation = async (userId , conversationId) => {
     const userOne = await User.findById(userId);
-    const conversation = userOne.mesages.find(x => x._id == conversationId)
+    const conversation = userOne.mesages.find(x => x.convId == conversationId)
     let userTwoId = "";
     conversation.participants.forEach(x => {
         if(x.id != userId){
             userTwoId = x.id;
         }
     })
-    userOne.mesages = userOne.mesages.filter(x => x._id != conversationId);
+    userOne.mesages = userOne.mesages.filter(x => x.convId != conversationId);
     await userOne.save();
     let userTwo = await User.findById(userTwoId); 
-    let userTwoConv = userTwo.mesages.find(x => x._id == conversationId);
+    let userTwoConv = userTwo.mesages.find(x => x.convId == conversationId);
     if(userTwoConv){
     userTwoConv.mesages.push({
         read: false,
@@ -104,20 +101,18 @@ exports.addMessage = async (text, otherUserId , userId , textMessageId) => {
         mesage : text , 
         user : userId 
     }
-    let UserOneMessages = userOne.mesages.filter(x => x._id == textMessageId)[0] ;
+    let UserOneMessages = userOne.mesages.filter(x => x.convId == textMessageId)[0] ;
     UserOneMessages.mesages.push(textMessageOne); 
     await userOne.save()
-    let UserTwoMessages = userTwo.mesages.filter(x => x._id == textMessageId)[0] ;
+    let UserTwoMessages = userTwo.mesages.filter(x => x.convId == textMessageId)[0] ;
     UserTwoMessages.mesages.push(textMessageTwo); 
     await userTwo.save()
     return 
 }
 exports.readMessages = async (userId , conversationId) => {
     const userOne = await User.findById(userId);
-    
-    let conversation = userOne.mesages.find(x => x._id == conversationId);
-    console.log("conv")
-    conversation.mesages = conversation.mesages.map(x => ({...x , read : true}));
+    let conversation = userOne.mesages.find(x => x.convId == conversationId);
+    conversation.mesages = conversation.mesages?.map(x => ({...x , read : true}));
     await userOne.save();
 }
 exports.getUserData = async (userId) => {
