@@ -13,8 +13,7 @@ const app = express() ;
 app.use(cors());
 app.use(bodyParser.json())
 app.use(express.urlencoded({extended : false})) ;
-app.use(express.json())
-app.use(express.raw({ type: 'image/*', limit: '5mb' }))
+app.use(express.raw({ type: 'image/*', limit: '5mb' }));
 app.use(authMiddkewares.authentication);
 
 app.use(router)
