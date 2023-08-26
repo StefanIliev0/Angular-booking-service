@@ -1,4 +1,0 @@
-
-exports.addImage= async (image) => {
-
-}

@@ -33,7 +33,6 @@ if(colection.length > 0){
 }
  return {colection,colectionLength}
 } 
-
 exports.addPlace = async ( place ) => {
     let newPlace = await Place.create(place);
     return newPlace; 

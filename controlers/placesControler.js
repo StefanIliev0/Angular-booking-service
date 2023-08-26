@@ -21,11 +21,10 @@ router.get(`/work-catalog` , async (req, res , next)=>{
     try{
 
     let page = req.query.page;
-    let limit = req.query.limit;
     let location = req.query.location;
     let price = req.query.price;
 
-    let places = await placeServices.getColection({businesTravel : true}, page, limit ,location,price) ; 
+    let places = await placeServices.getColection({businesTravel : true}, page ,location,price) ; 
 
     res.json(places) ;
 }catch(err){
@@ -64,7 +63,7 @@ router.delete(`/:placeId/remove`,authMiddkewares.autorization ,async (req, res ,
     res.status(400).json({ error : err.message });
 }
 });
-router.post(`/create`,authMiddkewares.autorization ,async (req, res , next)=>{
+router.post(`/create`,authMiddkewares.authentication ,async (req, res , next)=>{
     try{
     const {title , description, images, location, price, facilities, businesTravel, rooms} = req.body; 
     const owner = req.user._id ;
@@ -88,7 +87,7 @@ router.post(`/create`,authMiddkewares.autorization ,async (req, res , next)=>{
         res.status(400).json({ error : err.message });
      }
 });
-router.post(`/:placeId/addComment` ,async (req, res , next)=>{
+router.post(`/:placeId/addComment`, authMiddkewares.authentication ,async (req, res , next)=>{
       try{
     const {comment} = req.body; 
     const userID = req.user._id ;

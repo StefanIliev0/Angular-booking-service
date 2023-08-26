@@ -30,7 +30,7 @@ if(placeID){
     if(currentItemOwner.owner === CurrentUserId){
         next()
     }else {
-    res.status(401)
+    res.status(401).json({})
     }
 }
 if(userID){

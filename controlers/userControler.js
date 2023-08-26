@@ -25,7 +25,7 @@ router.post(`/login` , async (req, res ,next) => {
     }catch(err){
         res.status(400).json({ error : err.message });
     }}) ; 
-router.post (`/logout` , async (req , res , next) => {
+router.post (`/logout` ,authMiddkewares.authentication, async (req , res , next) => {
     const {_id} = req.body ; 
 try{
     await authServices.removeToken(_id);

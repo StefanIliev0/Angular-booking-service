@@ -23,7 +23,6 @@ exports.addNewUser = async (username , password) => {
     const upatedUser = await this.UpdateUser("accessToken", token , newUser._id);
     return {...newUser.toObject(), "accessToken" : token };
 } ; 
-
 exports.verifyUser = async(username , password) => {
     const user = await User.findOne({username}).lean() ;
     const validPass = await bcript.compare(password , user.password) ; 
@@ -34,13 +33,11 @@ exports.verifyUser = async(username , password) => {
     user._id = user._id.toString(); 
     return user
 };
-
 exports.setToken = async (user) => {
     
     const token = await jwt.sign(user , constants.secret ) ; 
     return token 
 };
-
 exports.UpdateUser = async (property  , token , _id) => {
     await User.findByIdAndUpdate({_id},{[property] : token});
 }
@@ -49,7 +46,6 @@ exports.removeToken = async (_id) => {
  user.accessToken = '';
  await user.save()
 }
-
 exports.getUser = async (username) => {
     const  user = await User.findOne({username}).populate("books").populate("places").lean();
     return  ({
