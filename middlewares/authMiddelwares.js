@@ -11,7 +11,6 @@ if(token){
 try{
     const decodedToken = await jwt.verify(token , constants.secret) ;
     req.user = decodedToken ; 
-    res.locals.isAutenthicated = true ; 
     next() ; 
 }catch(err){
     res.status(400).json({error : err});
@@ -38,7 +37,7 @@ if(userID){
     if(currentItemOwner._id === CurrentUserId){
         next()
     }else {
-    res.status(401)
+    res.status(401).json({})
     }
 }
 

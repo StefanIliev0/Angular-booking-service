@@ -14,7 +14,6 @@ The application is designed to serve the [Angular Booking App](https://github.co
 5. [Controlers](#controlers)
 6. [Services](#services)
 7. [Midlewares](#midlewares)
-8. [Utils](#utils)
 
 
 ## Startup
@@ -81,6 +80,8 @@ Once defined, Router() accepts and uses three subrouters:
 
 * Images router -this router serves all requests starts with `/images`.
 
+[home](#contents)
+
 ## Models 
 
 Because the application uses MongoDB as a database. 
@@ -144,6 +145,7 @@ Structure :
 
 * businesTravel - this is a boolean where is stored whether the place will be used for business trips or for tourist trips. 
  
+[home](#contents)
 
 ## Controlers 
 
@@ -235,8 +237,9 @@ There are three controllers in the app. Each controller is responsible for paths
 
 * `/images/:fileName` -  In this request, the application received `fileName` from request`s params. After then via AWS.S3() remove current file from storage. Finally, it return empty object to the consumer application.  If an error occurs, it returns an object that contains a message with information about an error that occurred.  
 
+[home](#contents)
 
-## Services. 
+## Services 
 
 ### Auth service
 
@@ -284,6 +287,7 @@ Authentication service is responsible for authentication of users.It have six me
    * Return user object. 
 
 
+[home](#contents)
 
 ### User service 
 
@@ -361,6 +365,7 @@ User service is responsible user-related actions.It have ten methods.
    * Gets user object from  DB. 
    * Return messages and books from user object as a new object.
 
+[home](#contents)
 
 ### Place service 
 
@@ -422,7 +427,35 @@ Place service is responsible place-related actions.It have nine methods.
    * Remove place object from  DB. 
    * Return place object.
 
+[home](#contents)
+
+## Midlewares
+
+This app have one midleware who has two methods : 
+
+### Authentication
+
+This method takes care of checking if the user is authenticated.
+If it is authenticated, information about the user is added to the request.
+
+The working algorithm is:
+
+* Check headers for `accessToken` header. 
+* If have this header verify it.
+* If verify, sets token as user object in request.
+* use `next()` to continue with request.
+
+### Autorization 
+
+This method takes care ot checking if the user is autorizated. 
+
+The working algorithm is:
+
+* Gets users Id from request. 
+* Get userID and placeId from params.
+* Checks if one of these is available. If available, gets the object from the database.
+* Checks the owner of the object. If it matches the user id taken from the request it executes `next()`, otherwise it terminates the request and returns an error.
+
+[home](#contents)
 
 
-
-Work in progress ... 
