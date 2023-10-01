@@ -7,6 +7,7 @@ const Place = require('../models/Place');
 
 exports.authentication = async (req,res,next) => {
 const token = req.header("accessToken") ; 
+const HcmToken = req.header("HcmToken") ; 
 if(token){
 try{
     const decodedToken = await jwt.verify(token , constants.secret) ;
@@ -15,6 +16,14 @@ try{
 }catch(err){
     res.status(400).json({error : err});
 }
+}else if(HcmToken){
+    try{
+        const decodedHcmToken = await jwt.verify(HcmToken , constants.secret) ;
+        req.user = decodedHcmToken ; 
+        next() ; 
+    }catch(err){
+        res.status(400).json({error : err});
+    }
 }else{
     next() ; 
 }
