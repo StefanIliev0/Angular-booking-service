@@ -634,9 +634,9 @@ exports.setendDateToEmpl = async (compStr , id , body) => {
     };
     let date = new Date()
     let contract =  company.contracts.find(x =>(x.emplId == id && (x.endDate == '' || Number(new Date(x.endDate)) > Number(date)) && ( Number(new Date(x.startDate)) <  Number(date))   )); 
-    
+    if(contract){
     contract.endDate = body ; 
-
+}
     await company.save();
     
    return
